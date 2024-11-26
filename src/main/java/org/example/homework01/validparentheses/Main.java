@@ -3,6 +3,7 @@ package org.example.homework01.validparentheses;
 import java.util.HashMap;
 import java.util.Stack;
 
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public class Main {
     public static void main(String[] args) {
         System.out.println(isValid("()"));
