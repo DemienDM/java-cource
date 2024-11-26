@@ -1,4 +1,4 @@
-package org.example.homework01.reverseLinkedList;
+package org.example.homework01.reverselinkedlist;
 
 public class Main {
     public static void main(String[] args) {
@@ -7,7 +7,7 @@ public class Main {
         head = reverseList(head);
 
         ListNode tmp = head;
-        while(tmp != null) {
+        while (tmp != null) {
             System.out.println(tmp.val);
             tmp = tmp.next;
         }
@@ -18,7 +18,7 @@ public class Main {
         ListNode prev = null;
         ListNode next;
 
-        while(curr != null) {
+        while (curr != null) {
             next = curr.next;
             curr.next = prev;
             prev = curr;

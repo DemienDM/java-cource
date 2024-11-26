@@ -1,4 +1,4 @@
-package org.example.homework01.validParentheses;
+package org.example.homework01.validparentheses;
 
 import java.util.HashMap;
 import java.util.Stack;
@@ -22,19 +22,19 @@ public class Main {
         Stack<Character> closingBrackets = new Stack<>();
 
         Character curr;
-        for(int i = 0; i < str.length(); i++) {
+        for (int i = 0; i < str.length(); i++) {
             curr = str.charAt(i);
 
-            if(bracketsMap.containsValue(curr) && closingBrackets.search(curr) == -1) {
+            if (bracketsMap.containsValue(curr) && closingBrackets.search(curr) == -1) {
                 return false;
             }
 
-            if(bracketsMap.containsKey(curr)) {
+            if (bracketsMap.containsKey(curr)) {
                 closingBrackets.push(bracketsMap.get(curr));
                 continue;
             }
 
-            if(closingBrackets.empty() || closingBrackets.search(curr) == -1) {
+            if (closingBrackets.empty() || closingBrackets.search(curr) == -1) {
                 continue;
             }
 
