@@ -2,9 +2,7 @@ package org.example.homework01.movezeroes;
 
 import java.util.Arrays;
 
-@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public class Main {
-    @SuppressWarnings("checkstyle:MagicNumber")
     public static void main(String[] args) {
 
         int[] arr = {0, 1, 0, 3, 12};
