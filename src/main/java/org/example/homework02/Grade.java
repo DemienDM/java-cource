@@ -1,6 +1,6 @@
 package org.example.homework02;
 
-final class Grade {
+public final class Grade {
 
     private final String subject;
 

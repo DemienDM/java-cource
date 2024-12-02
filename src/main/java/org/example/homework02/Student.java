@@ -3,7 +3,7 @@ package org.example.homework02;
 import java.util.ArrayList;
 import java.util.List;
 
-final class Student {
+public final class Student {
     private final String name;
 
     private final Integer age;

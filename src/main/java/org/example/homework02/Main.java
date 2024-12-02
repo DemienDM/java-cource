@@ -17,9 +17,9 @@ public class Main {
     }
 
     private static Stream<StudentGrade> mapToRecord(Student student) {
-        return student.
-                getGrades().
-                stream()
+        return student
+                .getGrades()
+                .stream()
                 .map((grade) -> new StudentGrade(
                         student.getName(),
                         student.getSchool(),

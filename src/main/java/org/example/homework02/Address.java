@@ -1,6 +1,6 @@
 package org.example.homework02;
 
-final class Address {
+public final class Address {
 
     private final String city;
 
