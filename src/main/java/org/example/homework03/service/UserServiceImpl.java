@@ -5,9 +5,8 @@ import org.example.homework03.domain.service.UserService;
 import org.example.homework03.dto.UserRegistrationDto;
 import org.example.homework03.dto.UserResponseDto;
 import org.example.homework03.entity.User;
+import org.example.homework03.exception.EntityNotFoundException;
 import org.example.homework03.mapper.UserMapper;
-
-import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -16,33 +15,21 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    public UserResponseDto registerUser(UserRegistrationDto userRegistrationDto) {
-        User user = userRepository.persistUser(UserMapper.toEntity(userRegistrationDto));
+    public UserResponseDto register(UserRegistrationDto userRegistrationDto) {
+        User user = userRepository.persist(UserMapper.toEntity(userRegistrationDto));
 
         return UserMapper.toResponseDto(user);
     }
 
-    public Optional<UserResponseDto> getUserById(Long userId) {
-        Optional<User> optionalUser = userRepository.getUserById(userId);
-
-         if (optionalUser.isEmpty()) {
-            return Optional.empty();
-         }
-
-         UserResponseDto userResponseDto = UserMapper.toResponseDto(optionalUser.get());
-
-         return Optional.of(userResponseDto);
+    public UserResponseDto getById(Long userId) {
+        return userRepository.findById(userId)
+                .map(UserMapper::toResponseDto)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
     }
 
-    public Optional<UserResponseDto> getUserByEmail(String email) {
-        Optional<User> optionalUser = userRepository.getUserByEmail(email);
-
-        if (optionalUser.isEmpty()) {
-            return Optional.empty();
-        }
-
-        UserResponseDto userResponseDto = UserMapper.toResponseDto(optionalUser.get());
-
-        return Optional.of(userResponseDto);
+    public UserResponseDto getByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(UserMapper::toResponseDto)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with Email: " + email));
     }
 }

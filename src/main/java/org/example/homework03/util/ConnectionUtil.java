@@ -11,8 +11,8 @@ public class ConnectionUtil {
     private static final Properties DB_PROPERTIES = new Properties();
 
     static {
-        DB_PROPERTIES.put("user", "user");
-        DB_PROPERTIES.put("password", "password");
+        DB_PROPERTIES.put("user", "koins");
+        DB_PROPERTIES.put("password", "lkchpy91");
 
         try {
             Class.forName(DRIVER_URL);

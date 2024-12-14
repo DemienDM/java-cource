@@ -1,40 +1,38 @@
 package org.example.homework03.validator;
 
-import org.example.homework03.domain.service.UserService;
+import org.example.homework03.domain.repository.UserRepository;
 import org.example.homework03.dto.UserRegistrationDto;
-import org.example.homework03.dto.UserResponseDto;
+import org.example.homework03.entity.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class UserValidator {
 
-    private String error;
+    private List<String> errors = new ArrayList<>();
 
-    private final UserService userService;
+    private final UserRepository userRepository;
 
-    public UserValidator(UserService userService) {
-        this.userService = userService;
+    public UserValidator(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     public boolean isValid(UserRegistrationDto userRegistrationDto) {
-        error = null;
+        errors = new ArrayList<>();
 
-        if (!checkEmail(userRegistrationDto.email())) {
-            return false;
-        }
+        checkEmail(userRegistrationDto.email());
+        checkPhoneNumber(userRegistrationDto.phoneNumber());
+        checkPassword(userRegistrationDto.password(), userRegistrationDto.repeatPassword());
 
-        if (!checkPhoneNumber(userRegistrationDto.phoneNumber())) {
-            return false;
-        }
-
-        return checkPassword(userRegistrationDto.password(), userRegistrationDto.repeatPassword());
+        return !hasErrors();
     }
 
-    private boolean checkEmail(String email) {
+    private void checkEmail(String email) {
         if (email == null || email.isBlank()) {
-            error = "`Email` can not be empty.";
-            return false;
+            errors.add("`Email` can not be empty.");
+            return;
         }
 
         boolean isEmail = Pattern.compile("^(.+)@(\\S+)$")
@@ -42,22 +40,18 @@ public class UserValidator {
                 .matches();
 
         if (!isEmail) {
-            error = "`Email` has wrong format.";
-            return false;
+            errors.add("`Email` has wrong format.");
         }
 
-        Optional<UserResponseDto> optionalUserResponseDto = userService.getUserByEmail(email);
-        if (optionalUserResponseDto.isPresent()) {
-            error = "`User` already exists.";
-            return false;
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            errors.add("`User` already exists.");
         }
-
-        return true;
     }
 
-    private boolean checkPhoneNumber(String phoneNumber) {
+    private void checkPhoneNumber(String phoneNumber) {
         if (phoneNumber == null || phoneNumber.isBlank()) {
-            return true;
+            return;
         }
 
         boolean isPhoneNumber = Pattern.compile("^[+](?:[0-9\\-()/.]\\s?){6,15}[0-9]$")
@@ -65,16 +59,14 @@ public class UserValidator {
                 .matches();
 
         if (!isPhoneNumber) {
-            error = "`Phone Number` has wrong format.";
+            errors.add("`Phone Number` has wrong format.");
         }
-
-        return isPhoneNumber;
     }
 
-    private boolean checkPassword(String password, String passwordRepeat) {
+    private void checkPassword(String password, String passwordRepeat) {
         if (password == null || password.isBlank() || passwordRepeat == null || passwordRepeat.isBlank()) {
-            error = "`Password` & `PasswordRepeat` are required.";
-            return false;
+            errors.add("`Password` & `PasswordRepeat` are required.");
+            return;
         }
 
         boolean isPassword = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,20}$")
@@ -82,19 +74,19 @@ public class UserValidator {
                 .matches();
 
         if (!isPassword) {
-            error = "`Password` has wrong format.";
-            return false;
+            errors.add("`Password` has wrong format.");
         }
 
         if (!password.equals(passwordRepeat)) {
-            error = "`Password` and `PasswordRepeat` are not equal.";
-            return false;
+            errors.add("`Password` and `PasswordRepeat` are not equal.");
         }
-
-        return true;
     }
 
-    public String getError() {
-        return error;
+    public List<String> getErrors() {
+        return errors;
+    }
+
+    public boolean hasErrors() {
+        return !errors.isEmpty();
     }
 }

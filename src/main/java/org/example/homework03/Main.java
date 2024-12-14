@@ -7,8 +7,6 @@ import org.example.homework03.repository.UserRepositoryImpl;
 import org.example.homework03.service.UserServiceImpl;
 import org.example.homework03.validator.UserValidator;
 
-import java.util.Optional;
-
 public class Main {
     public static void main(String[] args) {
 
@@ -19,20 +17,20 @@ public class Main {
                 "$StrongPassword012"
         );
 
-        UserValidator userValidator = new UserValidator(new UserServiceImpl(new UserRepositoryImpl()));
+        UserValidator userValidator = new UserValidator(new UserRepositoryImpl());
 
         if (!userValidator.isValid(userRegistrationDto)) {
-            System.out.println(userValidator.getError());
+            System.out.println(userValidator.getErrors());
             return;
         }
 
         UserService userService = new UserServiceImpl(new UserRepositoryImpl());
 
-        UserResponseDto userResponseDto = userService.registerUser(userRegistrationDto);
+        UserResponseDto userResponseDto = userService.register(userRegistrationDto);
         System.out.println(userResponseDto);
 
-        Optional<UserResponseDto> optionalDto = userService.getUserById(userResponseDto.userId());
+        userResponseDto = userService.getById(userResponseDto.userId());
 
-        optionalDto.ifPresentOrElse(System.out::println, () -> System.out.println("User does not exist."));
+        System.out.println(userResponseDto);
     }
 }

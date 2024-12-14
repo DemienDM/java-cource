@@ -17,7 +17,7 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String PHONE_NUMBER = "phoneNumber";
     private static final String PASSWORD = "password";
 
-    public User persistUser(User user) {
+    public User persist(User user) {
         String sql = "INSERT INTO users (email, phoneNumber, password) VALUES (?, ?, ?);";
 
         try (Connection connection = ConnectionUtil.getConnection();
@@ -41,7 +41,7 @@ public class UserRepositoryImpl implements UserRepository {
         return user;
     }
 
-    public Optional<User> getUserById(Long id) {
+    public Optional<User> findById(Long id) {
         String sql = "SELECT * FROM users WHERE id = ?";
 
         try (Connection connection = ConnectionUtil.getConnection();
@@ -53,13 +53,13 @@ public class UserRepositoryImpl implements UserRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Method UserRepository.findById was failed with exception.", e);
         }
 
         return Optional.empty();
     }
 
-    public Optional<User> getUserByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
 
         try (Connection connection = ConnectionUtil.getConnection();
@@ -71,7 +71,7 @@ public class UserRepositoryImpl implements UserRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Method UserRepository.findByEmail was failed with exception.", e);
         }
 
         return Optional.empty();
@@ -91,7 +91,7 @@ public class UserRepositoryImpl implements UserRepository {
                     password
             );
         } catch (SQLException e) {
-            throw new RuntimeException("Can not parse 'user' from resultSet.");
+            throw new RuntimeException("Can not parse 'user' from resultSet.", e);
         }
     }
 

@@ -5,9 +5,9 @@ import org.example.homework03.entity.User;
 import java.util.Optional;
 
 public interface UserRepository {
-    User persistUser(User user);
+    User persist(User user);
 
-    Optional<User> getUserById(Long id);
+    Optional<User> findById(Long id);
 
-    Optional<User> getUserByEmail(String email);
+    Optional<User> findByEmail(String email);
 }

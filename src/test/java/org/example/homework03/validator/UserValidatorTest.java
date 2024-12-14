@@ -1,8 +1,8 @@
 package org.example.homework03.validator;
 
-import org.example.homework03.domain.service.UserService;
+import org.example.homework03.domain.repository.UserRepository;
 import org.example.homework03.dto.UserRegistrationDto;
-import org.example.homework03.dto.UserResponseDto;
+import org.example.homework03.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,14 +11,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserValidatorTest {
 
     @Mock
-    private UserService userService;
+    private UserRepository userRepository;
 
     @InjectMocks
     private UserValidator userValidator;
@@ -34,7 +35,7 @@ class UserValidatorTest {
 
         boolean isValid = userValidator.isValid(userRegistrationDto);
         assertFalse(isValid);
-        assertEquals("`Email` can not be empty.", userValidator.getError());
+        assertTrue(userValidator.getErrors().contains("`Email` can not be empty."));
     }
 
     @Test
@@ -46,18 +47,19 @@ class UserValidatorTest {
                 "$StrongPassword012"
         );
 
-        UserResponseDto userResponseDto = new UserResponseDto(
+        User user = new User(
                 1L,
                 "my@gmail.com",
-                "+34 301 539-0605"
+                "+34 301 539-0605",
+                "$StrongPassword012"
         );
 
-        when(userService.getUserByEmail(userRegistrationDto.email()))
-                .thenReturn(Optional.of(userResponseDto));
+        when(userRepository.findByEmail(userRegistrationDto.email()))
+                .thenReturn(Optional.of(user));
 
         boolean isValid = userValidator.isValid(userRegistrationDto);
         assertFalse(isValid);
-        assertEquals("`User` already exists.", userValidator.getError());
+        assertTrue(userValidator.getErrors().contains("`User` already exists."));
     }
 
     @Test
@@ -71,6 +73,6 @@ class UserValidatorTest {
 
         boolean isValid = userValidator.isValid(userRegistrationDto);
         assertTrue(isValid);
-        assertNull(userValidator.getError());
+        assertFalse(userValidator.hasErrors());
     }
 }

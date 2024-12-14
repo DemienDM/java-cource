@@ -5,6 +5,7 @@ import org.example.homework03.dto.UserRegistrationDto;
 import org.example.homework03.dto.UserResponseDto;
 import org.example.homework03.entity.User;
 import org.example.homework03.service.UserServiceImpl;
+import org.example.homework03.validator.UserValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,8 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -26,6 +26,9 @@ class UserServiceTest {
     @InjectMocks
     private UserServiceImpl userService;
 
+    @InjectMocks
+    private UserValidator userValidator;
+
     @Test
     void registerUser_Success() {
         User user = new User(
@@ -35,7 +38,7 @@ class UserServiceTest {
                 "$StrongPassword012"
         );
 
-        when(userRepository.persistUser(any(User.class))).thenReturn(user);
+        when(userRepository.persist(any(User.class))).thenReturn(user);
 
         UserRegistrationDto userRegistrationDto = new UserRegistrationDto(
                 "my@gmail.com",
@@ -44,7 +47,7 @@ class UserServiceTest {
                 "$StrongPassword012"
         );
 
-        UserResponseDto userResponseDto = userService.registerUser(userRegistrationDto);
+        UserResponseDto userResponseDto = userService.register(userRegistrationDto);
 
         UserResponseDto userResponseDtoExpected = new UserResponseDto(
                 1L,
@@ -64,9 +67,9 @@ class UserServiceTest {
                 "$StrongPassword012"
         );
 
-        when(userRepository.getUserById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        Optional<UserResponseDto> optionalUserResponseDto = userService.getUserById(1L);
+        UserResponseDto userResponseDto = userService.getById(1L);
 
         UserResponseDto userResponseDtoExpected = new UserResponseDto(
                 1L,
@@ -74,8 +77,7 @@ class UserServiceTest {
                 "+34 301 539-0605"
         );
 
-        assertTrue(optionalUserResponseDto.isPresent());
-        assertEquals(userResponseDtoExpected, optionalUserResponseDto.get());
+        assertEquals(userResponseDtoExpected, userResponseDto);
     }
 
     @Test
@@ -87,9 +89,9 @@ class UserServiceTest {
                 "$StrongPassword012"
         );
 
-        when(userRepository.getUserByEmail("my@gmail.com")).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail("my@gmail.com")).thenReturn(Optional.of(user));
 
-        Optional<UserResponseDto> optionalUserResponseDto = userService.getUserByEmail(user.getEmail());
+        UserResponseDto userResponseDto = userService.getByEmail(user.getEmail());
 
         UserResponseDto userResponseDtoExpected = new UserResponseDto(
                 1L,
@@ -97,7 +99,6 @@ class UserServiceTest {
                 "+34 301 539-0605"
         );
 
-        assertTrue(optionalUserResponseDto.isPresent());
-        assertEquals(userResponseDtoExpected, optionalUserResponseDto.get());
+        assertEquals(userResponseDtoExpected, userResponseDto);
     }
 }
