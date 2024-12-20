@@ -22,6 +22,8 @@ public class RoleRepositoryImpl implements RoleRepository {
 
     @Override
     public Optional<Role> findById(Long id) {
-        return Optional.ofNullable(sessionFactory.openSession().find(Role.class, id));
+        try (Session session = sessionFactory.openSession()) {
+            return Optional.ofNullable(session.find(Role.class, id));
+        }
     }
 }

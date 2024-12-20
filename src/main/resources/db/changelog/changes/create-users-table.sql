@@ -12,5 +12,4 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb3
 COLLATE=utf8mb3_general_ci;
 
-
 --rollback DROP TABLE users;

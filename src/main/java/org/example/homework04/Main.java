@@ -13,7 +13,7 @@ public class Main {
         RoleRepository roleRepository = new RoleRepositoryImpl();
 
         // Create new Role.
-        Role role = roleRepository.create(new Role(null, "Root"));
+        Role role = roleRepository.create(new Role("Root"));
         System.out.println(role);
 
         // Find Role.
